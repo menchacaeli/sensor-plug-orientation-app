@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sensor-plug App</title>
+  </head>
+  <body>
+    <div>
+      <!-- The following progress tags will illustrate the current value of the sensor data -->
+      <!-- Notice each id correlates to the variables in the directives.js -> getElementById <- -->
+      <!-- There are many different ways to illustrate the value of sensor data -->
+      <!-- I encourage you to try different routes. -->
+      <h1>Gamma:</h1>
+      <progress id="gamma" max="100">null</progress>
+      <h1>Beta:</h1>
+      <progress id="beta" max="100">null</progress>
+      <h1>Alpha:</h1>
+      <progress id="alpha" max="100">null</progress>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/sensor-plug/dist/sensorplug.js"></script>
+
+    <script>
+      'use strict';
+		  var socket = io();
+
+      // collecting sensor data from the helper function renderData and sending to server-side
+      socket.on('orient', function (data) {
+        renderData(data);
+      });
+
+      // sensor-plug: self executing function, fires the orientation method.
+      Device.handleOrientation();
+
+      // helper function for orientation data, receiving the following:
+      // Gamma: Rotation around the front-to-back axis
+      // Beta: Rotation around the side-to-side axis
+      // Alpha: Rotation around the vertical axis
+      // In this demonstration the value changes in real-time.
+      function renderData (oriObj) {
+        // variables to retrieve the object data from sensor-plug lib
+        var gammaValue = Math.round(oriObj.gamma);
+        var betaValue = Math.round(oriObj.beta);
+        var alphaValue = Math.round(oriObj.alpha);
+
+        // The following variables give you an example of the data visualization.
+        // The sensor data in this case will change the value in the html.
+        var gammaObj = document.getElementById('gamma');
+        gammaObj.setAttribute('value', gammaValue);
+
+        var betaObj = document.getElementById('beta');
+        betaObj.setAttribute('value', betaValue);
+
+        var alphaObj = document.getElementById('alpha');
+        alphaObj.setAttribute('value', alphaValue);
+
+      }
+		</script>
+  </body>
+</html>
